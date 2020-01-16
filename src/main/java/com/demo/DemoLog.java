@@ -1,26 +1,29 @@
 package com.demo;
 
 import com.hazelcast.core.IQueue;
+import com.hazelcast.core.ItemEvent;
 import com.hazelcast.reactive.ReactiveHazelcast;
 import com.hazelcast.reactive.ReactiveHazelcastInstance;
+import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 
 class DemoLog {
-    public static void main(String[] args) {
-        ReactiveHazelcastInstance instance = ReactiveHazelcast.newHazelcastInstance();
-        IQueue<Integer> transactions = instance.instance().getQueue("transactions");
+    public static void main(String[] args) throws Exception {
+        try (ReactiveHazelcastInstance instance = ReactiveHazelcast.newHazelcastInstance()) {
+            IQueue<Integer> transactions = instance.getQueue("transactions");
 
-        startSimulation(transactions);
+            startSimulation(transactions);
 
-        instance.getEventStreamForQueue(transactions)
-          .log()
-          .take(Duration.ofSeconds(120))
-          .blockLast();
+            Flux<ItemEvent<Integer>> eventStream = instance.getEventStreamForQueue(transactions);
 
-        instance.instance().shutdown();
+            eventStream
+              .log()
+              .take(Duration.ofSeconds(120))
+              .blockLast();
+        }
     }
 
     private static void startSimulation(IQueue<Integer> transactions) {

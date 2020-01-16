@@ -10,25 +10,26 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 
 class DemoAggregation {
-    public static void main(String[] args) {
-        ReactiveHazelcastInstance instance = ReactiveHazelcast.newHazelcastInstance();
-        IQueue<Integer> transactions = instance.instance().getQueue("transactions");
+    public static void main(String[] args) throws Exception {
+        try (ReactiveHazelcastInstance instance = ReactiveHazelcast.newHazelcastInstance()) {
 
-        startSimulation(transactions);
+            IQueue<Integer> transactions = instance.getQueue("transactions");
 
-        instance.getEventStreamForQueue(transactions)
-          .log()
-          .filter(e -> e.getEventType() == ItemEventType.ADDED)
-          .window(Duration.ofSeconds(1))
-          .flatMap(agg -> agg.reduce(0, (sum, e) -> sum + e.getItem()))
-          .filter(sum -> sum > 0)
-          .doOnNext(s -> System.out.println("Sum of transactions in last second: " + s))
-          .take(Duration.ofSeconds(30))
-          .reduce(0, Integer::sum)
-          .doOnNext(s -> System.out.println("Sum of transactions: " + s))
-          .block();
+            startSimulation(transactions);
 
-        instance.instance().shutdown();
+            instance.getEventStreamForQueue(transactions)
+              .log()
+              .filter(e -> e.getEventType() == ItemEventType.ADDED)
+              .window(Duration.ofSeconds(1))
+              .flatMap(agg -> agg.reduce(0, (sum, e) -> sum + e.getItem()))
+              .filter(sum -> sum > 0)
+              .doOnNext(s -> System.out.println("Sum of transactions in last second: " + s))
+              .take(Duration.ofSeconds(30))
+              .reduce(0, Integer::sum)
+              .doOnNext(s -> System.out.println("Sum of transactions: " + s))
+              .block();
+
+        }
     }
 
     private static void startSimulation(IQueue<Integer> transactions) {

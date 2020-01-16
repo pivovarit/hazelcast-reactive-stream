@@ -53,8 +53,12 @@ public class ReactiveHazelcastInstance implements HazelcastInstance {
     }
 
     public <K, V> Flux<EntryEvent<K, V>> getCDCStreamForMap(String name) {
+        return getCDCStreamForMap(instance.getMap(name));
+    }
+
+    public <K, V> Flux<EntryEvent<K, V>> getCDCStreamForMap(IMap<K, V> map) {
         ReactiveCDCListener<K, V> listener = new ReactiveCDCListener<>();
-        instance.getMap(name).addEntryListener(listener, true);
+        map.addEntryListener(listener, true);
         return Flux.create(listener::register);
     }
 

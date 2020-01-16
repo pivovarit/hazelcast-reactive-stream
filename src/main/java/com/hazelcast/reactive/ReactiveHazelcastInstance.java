@@ -29,7 +29,7 @@ public class ReactiveHazelcastInstance {
     public <K, V> Flux<EntryEvent<K, V>> getEventStreamForMap(IMap<K, V> map, boolean includeValue) {
         IMapFluxSink<K, V> listener = new IMapFluxSink<>();
         map.addEntryListener(listener, includeValue);
-        return Flux.create(listener::register);
+        return Flux.create(sink -> listener.register(sink));
     }
 
     public <E> Flux<ItemEvent<E>> getEventStreamForQueue(String name) {

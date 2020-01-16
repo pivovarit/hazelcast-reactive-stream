@@ -23,35 +23,35 @@ class IMapFluxSink<K, V>
 
     @Override
     public void entryAdded(EntryEvent<K, V> event) {
-        if (sink != null) {
+        if (sink != null && !sink.isCancelled()) {
             sink.next(event);
         }
     }
 
     @Override
     public void entryLoaded(EntryEvent<K, V> event) {
-        if (sink != null) {
+        if (sink != null && !sink.isCancelled()) {
             sink.next(event);
         }
     }
 
     @Override
     public void entryMerged(EntryEvent<K, V> event) {
-        if (sink != null) {
+        if (sink != null && !sink.isCancelled()) {
             sink.next(event);
         }
     }
 
     @Override
     public void entryRemoved(EntryEvent<K, V> event) {
-        if (sink != null) {
+        if (sink != null && !sink.isCancelled()) {
             sink.next(event);
         }
     }
 
     @Override
     public void entryUpdated(EntryEvent<K, V> event) {
-        if (sink != null) {
+        if (sink != null && !sink.isCancelled()) {
             sink.next(event);
         }
     }

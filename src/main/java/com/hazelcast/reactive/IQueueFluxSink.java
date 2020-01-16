@@ -14,14 +14,14 @@ class IQueueFluxSink<E> implements ItemListener<E> {
 
     @Override
     public void itemAdded(ItemEvent<E> item) {
-        if (sink != null) {
+        if (sink != null && !sink.isCancelled()) {
             sink.next(item);
         }
     }
 
     @Override
     public void itemRemoved(ItemEvent<E> item) {
-        if (sink != null) {
+        if (sink != null && !sink.isCancelled()) {
             sink.next(item);
         }
     }

@@ -8,7 +8,7 @@ import com.hazelcast.map.listener.EntryRemovedListener;
 import com.hazelcast.map.listener.EntryUpdatedListener;
 import reactor.core.publisher.FluxSink;
 
-class ReactiveCDCListener<K, V>
+class IMapFluxSink<K, V>
   implements EntryAddedListener<K, V>,
   EntryRemovedListener<K, V>,
   EntryMergedListener<K, V>,

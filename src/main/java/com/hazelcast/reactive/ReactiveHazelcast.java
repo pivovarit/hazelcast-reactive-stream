@@ -1,9 +1,9 @@
 package com.hazelcast.reactive;
 
-import com.hazelcast.instance.HazelcastInstanceFactory;
+import com.hazelcast.core.Hazelcast;
 
 public class ReactiveHazelcast {
     public static ReactiveHazelcastInstance newHazelcastInstance() {
-        return new ReactiveHazelcastInstance(HazelcastInstanceFactory.newHazelcastInstance(null));
+        return new ReactiveHazelcastInstance(Hazelcast.newHazelcastInstance());
     }
 }

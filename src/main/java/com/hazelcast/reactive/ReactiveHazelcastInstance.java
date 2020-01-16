@@ -18,29 +18,29 @@ public class ReactiveHazelcastInstance {
         return instance;
     }
 
-    public <K, V> Flux<EntryEvent<K, V>> getCDCStreamForMap(String name) {
-        return getCDCStreamForMap(instance.getMap(name));
+    public <K, V> Flux<EntryEvent<K, V>> getEventStreamForMap(String name) {
+        return getEventStreamForMap(instance.getMap(name));
     }
 
-    public <K, V> Flux<EntryEvent<K, V>> getCDCStreamForMap(IMap<K, V> map) {
-        return getCDCStreamForMap(map, true);
+    public <K, V> Flux<EntryEvent<K, V>> getEventStreamForMap(IMap<K, V> map) {
+        return getEventStreamForMap(map, true);
     }
 
-    public <K, V> Flux<EntryEvent<K, V>> getCDCStreamForMap(IMap<K, V> map, boolean includeValue) {
+    public <K, V> Flux<EntryEvent<K, V>> getEventStreamForMap(IMap<K, V> map, boolean includeValue) {
         IMapFluxSink<K, V> listener = new IMapFluxSink<>();
         map.addEntryListener(listener, includeValue);
         return Flux.create(listener::register);
     }
 
-    public <E> Flux<ItemEvent<E>> getCDCStreamForQueue(String name) {
-        return getCDCStreamForQueue(instance.getQueue(name));
+    public <E> Flux<ItemEvent<E>> getEventStreamForQueue(String name) {
+        return getEventStreamForQueue(instance.getQueue(name));
     }
 
-    public <E> Flux<ItemEvent<E>> getCDCStreamForQueue(IQueue<E> queue) {
-        return getCDCStreamForQueue(queue, true);
+    public <E> Flux<ItemEvent<E>> getEventStreamForQueue(IQueue<E> queue) {
+        return getEventStreamForQueue(queue, true);
     }
 
-    public <E> Flux<ItemEvent<E>> getCDCStreamForQueue(IQueue<E> queue, boolean includeValue) {
+    public <E> Flux<ItemEvent<E>> getEventStreamForQueue(IQueue<E> queue, boolean includeValue) {
         IQueueFluxSink<E> listener = new IQueueFluxSink<>();
         queue.addItemListener(listener, includeValue);
         return Flux.create(listener::register);

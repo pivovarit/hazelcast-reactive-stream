@@ -1,3 +1,7 @@
+It's a playground. Please don't use it. It's not suitable for production.
+
+----
+
 Capture changes happening in the IMDG data structures and consume as Project Reactor's `Flux`:
 
 ```
